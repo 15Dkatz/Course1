@@ -18,17 +18,15 @@ module.exports = React.createClass({
 
   renderList(tasks) {
     return (
-      <View>
-        {
-          this.state.tasks.map((task) => {
-            return (
-              <Text key={task}>
+        this.state.tasks.map((task) => {
+          return (
+            <View key={task} style={styles.task}>
+              <Text>
                 {task}
               </Text>
-            );
-          })
-        }
-      </View>
+            </View>
+          );
+        })
     )
   },
 
@@ -45,7 +43,12 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     // styling to center overall content
+  },
+  task: {
+    flex: 1,
     justifyContent: 'center',
-    alignItems: 'center'
-  }
+    alignItems: 'center',
+    borderWidth: 2
+  },
+
 })
