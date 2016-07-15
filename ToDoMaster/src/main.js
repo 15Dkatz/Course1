@@ -1,3 +1,5 @@
+//Should I teach the ListView component or save it until a later section?
+
 import React, { Component } from 'react';
 import {
   View,
@@ -5,17 +7,39 @@ import {
   StyleSheet
 } from 'react-native';
 
-export default class Main extends Component {
+module.exports = React.createClass({
+  getInitialState() {
+    // for the purpose of this app, we will call things to-do, tasks
+      // fake data that we will change later depending on input
+    return {
+      tasks: ['Take out the trash', 'Get groceries', 'Send mail']
+    }
+  },
+
+  renderList(tasks) {
+    return (
+      <View>
+        {
+          this.state.tasks.map((task) => {
+            return (
+              <Text key={task}>
+                {task}
+              </Text>
+            );
+          })
+        }
+      </View>
+    )
+  },
+
   render() {
     return (
       <View style={styles.container}>
-        <Text>
-          Welcome to React Native!
-        </Text>
+        {this.renderList(this.state.tasks)}
       </View>
     )
   }
-}
+});
 
 const styles = StyleSheet.create({
   container: {
