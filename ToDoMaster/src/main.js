@@ -6,7 +6,9 @@ import {
   Text,
   StyleSheet,
   TextInput,
-  TouchableOpacity
+  TouchableOpacity,
+  ScrollView,
+  AsyncStorage
 } from 'react-native';
 
 module.exports = React.createClass({
@@ -14,15 +16,35 @@ module.exports = React.createClass({
     // for the purpose of this app, we will call things to-do, tasks
       // fake data that we will change later depending on input
     return {
-      tasks: ['Take out the trash', 'Get groceries', 'Send mail'],
+      tasks: null,
       // for textInput
       task: '',
-      completedTasks: []
+      completedTasks: null
     }
   },
 
+  componentWillMount() {
+    // grab the tasks and completedTasks local arrays
+    AsyncStorage.getItem('tasks')
+      .then((response) => {
+        this.setState({tasks: JSON.parse(response)})
+      });
+    AsyncStorage.getItem('completedTasks')
+      .then((response) => {
+        this.setState({completedTasks: JSON.parse(response)})
+      });
+  },
+
+  setStorage() {
+    // set the tasks and completedTasks as the asyncStorage arrays
+    console.log('this.state.tasks', this.state.tasks, 'stringified', JSON.stringify(this.state.tasks));
+    AsyncStorage.setItem('tasks', JSON.stringify(this.state.tasks));
+    AsyncStorage.setItem('completedTasks', JSON.stringify(this.state.completedTasks));
+  },
+
   renderList(tasks) {
-    return (
+    if (tasks) {
+      return (
         tasks.map((task, index) => {
           return (
             <View key={task} style={styles.task}>
@@ -41,43 +63,47 @@ module.exports = React.createClass({
             </View>
           );
         })
-    )
+      )
+    }
   },
 
 
   completeTask(index) {
     let completedTask = this.state.tasks[index];
-    let completedTasks = this.state.completedTasks.concat([completedTask]);
+    let completedTasks = this.state.completedTasks == null ? [completedTask] : this.state.completedTasks.concat([completedTask]);
     let tasks = this.state.tasks;
     tasks = tasks.slice(0, index).concat(tasks.slice(index+1));
     this.setState({
       tasks,
       completedTasks
     });
+    this.setStorage();
   },
 
 
   renderCompleted(tasks) {
-    return (
-      tasks.map((task, index) => {
-        return (
-          <View key={task} style={styles.task} >
-            <Text style={styles.completedTask}>
-              {task}
-            </Text>
-            <TouchableOpacity
-              onPress={() => {
-                this.deleteTask(index);
-              }}
-            >
-              <Text style={styles.icon}>
-                &#10005;
+    if (tasks) {
+      return (
+        tasks.map((task, index) => {
+          return (
+            <View key={task} style={styles.task} >
+              <Text style={styles.completedTask}>
+                {task}
               </Text>
-            </TouchableOpacity>
-          </View>
-        )
-      })
-    )
+              <TouchableOpacity
+                onPress={() => {
+                  this.deleteTask(index);
+                }}
+              >
+                <Text style={styles.icon}>
+                  &#10005;
+                </Text>
+              </TouchableOpacity>
+            </View>
+          )
+        })
+      )
+    }
   },
 
   deleteTask(index) {
@@ -86,15 +112,17 @@ module.exports = React.createClass({
     this.setState({
       completedTasks
     })
+    this.setStorage();
   },
-
 
   addTask() {
     // goal of addTask is to add the current task to this.state.tasks
-    let tasks = this.state.tasks.concat([this.state.task]);
+    let tasks = this.state.tasks == null ? [this.state.task] : this.state.tasks.concat([this.state.task]);
+    this.state.task='';
     this.setState({
       tasks
     });
+    this.setStorage();
   },
 
   render() {
@@ -115,8 +143,11 @@ module.exports = React.createClass({
             this.addTask()
           }}
         />
-        {this.renderList(this.state.tasks)}
-        {this.renderCompleted(this.state.completedTasks)}
+        {/*just use regular View until the end*/}
+        <ScrollView>
+          {this.renderList(this.state.tasks)}
+          {this.renderCompleted(this.state.completedTasks)}
+        </ScrollView>
       </View>
     )
   }
@@ -139,7 +170,7 @@ const styles = StyleSheet.create({
   },
   task: {
     // flex: 1,
-    height: 50,
+    height: 60,
     justifyContent: 'space-between',
     alignItems: 'center',
     borderBottomWidth: 1,
