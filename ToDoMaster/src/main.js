@@ -6,7 +6,7 @@ import {
   Text,
   StyleSheet,
   TextInput,
-  Button
+  TouchableOpacity
 } from 'react-native';
 
 module.exports = React.createClass({
@@ -22,16 +22,30 @@ module.exports = React.createClass({
 
   renderList(tasks) {
     return (
-        this.state.tasks.map((task) => {
+        this.state.tasks.map((task, index) => {
           return (
             <View key={task} style={styles.task}>
               <Text>
                 {task}
               </Text>
+              <TouchableOpacity
+                onPress={() => {
+                  this.deleteTask(task, index);
+                }}
+              >
+                <Text style={styles.checkMark}>
+                  &#10003;
+                </Text>
+              </TouchableOpacity>
             </View>
           );
         })
     )
+  },
+
+  deleteTask(task, index) {
+    let tasks = this.state.tasks.splice(index, 1);
+    this.setState(tasks);
   },
 
   addTask() {
@@ -74,9 +88,11 @@ const styles = StyleSheet.create({
   task: {
     // flex: 1,
     height: 50,
-    justifyContent: 'center',
+    justifyContent: 'space-between',
     alignItems: 'center',
-    borderBottomWidth: 1
+    borderBottomWidth: 1,
+    flexDirection: 'row',
+    padding: 20
   },
   taskInput: {
     height: 50,
@@ -85,6 +101,9 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     margin: 30,
     marginBottom: 0,
+  },
+  checkMark: {
+    fontSize: 20
   }
 
 })
