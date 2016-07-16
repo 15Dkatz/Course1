@@ -31,10 +31,10 @@ module.exports = React.createClass({
               </Text>
               <TouchableOpacity
                 onPress={() => {
-                  this.completeTask(task, index);
+                  this.completeTask(index);
                 }}
               >
-                <Text style={styles.checkMark}>
+                <Text style={styles.icon}>
                   &#10003;
                 </Text>
               </TouchableOpacity>
@@ -44,21 +44,8 @@ module.exports = React.createClass({
     )
   },
 
-  renderCompleted(tasks) {
-    return (
-      tasks.map((task) => {
-        return (
-          <View style={styles.task} key={task}>
-            <Text style={styles.completedTask}>
-              {task} - completed
-            </Text>
-          </View>
-        )
-      })
-    )
-  },
 
-  completeTask(task, index) {
+  completeTask(index) {
     let completedTask = this.state.tasks[index];
     let completedTasks = this.state.completedTasks.concat([completedTask]);
     let tasks = this.state.tasks;
@@ -68,6 +55,39 @@ module.exports = React.createClass({
       completedTasks
     });
   },
+
+
+  renderCompleted(tasks) {
+    return (
+      tasks.map((task, index) => {
+        return (
+          <View key={task} style={styles.task} >
+            <Text style={styles.completedTask}>
+              {task}
+            </Text>
+            <TouchableOpacity
+              onPress={() => {
+                this.deleteTask(index);
+              }}
+            >
+              <Text style={styles.icon}>
+                &#10005;
+              </Text>
+            </TouchableOpacity>
+          </View>
+        )
+      })
+    )
+  },
+
+  deleteTask(index) {
+    let tasks = this.state.completedTasks;
+    let completedTasks = tasks.slice(0, index).concat(tasks.slice(index+1));
+    this.setState({
+      completedTasks
+    })
+  },
+
 
   addTask() {
     // goal of addTask is to add the current task to this.state.tasks
@@ -80,6 +100,9 @@ module.exports = React.createClass({
   render() {
     return (
       <View style={styles.container}>
+        <View style={styles.header}>
+          <Text style={styles.headerText}>To-Do Master</Text>
+        </View>
         <TextInput
           placeholder='Add a task...'
           style={styles.taskInput}
@@ -87,7 +110,6 @@ module.exports = React.createClass({
             this.setState({
               task: text
             })
-            console.log(this.state.task);
           }}
           onEndEditing={(text) => {
             this.addTask()
@@ -105,6 +127,16 @@ const styles = StyleSheet.create({
     flex: 1,
     // styling to center overall content,
   },
+  header: {
+    height: 50,
+    justifyContent: 'center',
+    alignItems: 'flex-end',
+    flexDirection: 'row'
+  },
+  headerText: {
+    textAlign: 'center',
+    fontSize: 20
+  },
   task: {
     // flex: 1,
     height: 50,
@@ -112,17 +144,18 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     borderBottomWidth: 1,
     flexDirection: 'row',
-    padding: 20
+    padding: 20,
   },
   taskInput: {
     height: 50,
     textAlign: 'center',
     borderWidth: 1,
     borderRadius: 5,
-    margin: 30,
+    margin: 15,
     marginBottom: 0,
+    fontSize: 16
   },
-  checkMark: {
+  icon: {
     fontSize: 20
   },
   completedTask: {
