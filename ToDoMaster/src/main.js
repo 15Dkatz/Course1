@@ -13,7 +13,9 @@ module.exports = React.createClass({
     // for the purpose of this app, we will call things to-do, tasks
       // fake data that we will change later depending on input
     return {
-      tasks: ['Take out the trash', 'Get groceries', 'Send mail']
+      tasks: ['Take out the trash', 'Get groceries', 'Send mail'],
+      // for textInput
+      task: ''
     }
   },
 
@@ -37,6 +39,12 @@ module.exports = React.createClass({
         <TextInput
           placeholder='add a task'
           style={styles.taskInput}
+          onChangeText={(text) => {
+            this.setState({
+              task: text
+            })
+            console.log(this.state.task);
+          }}
         />
         {this.renderList(this.state.tasks)}
       </View>
@@ -47,7 +55,7 @@ module.exports = React.createClass({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    // styling to center overall content
+    // styling to center overall content,
   },
   task: {
     // flex: 1,
@@ -57,7 +65,12 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1
   },
   taskInput: {
-    height: 50
+    height: 50,
+    textAlign: 'center',
+    borderWidth: 1,
+    borderRadius: 5,
+    margin: 30,
+    marginBottom: 0,
   }
 
 })
