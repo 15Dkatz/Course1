@@ -16,13 +16,14 @@ module.exports = React.createClass({
     return {
       tasks: ['Take out the trash', 'Get groceries', 'Send mail'],
       // for textInput
-      task: ''
+      task: '',
+      completedTasks: []
     }
   },
 
   renderList(tasks) {
     return (
-        this.state.tasks.map((task, index) => {
+        tasks.map((task, index) => {
           return (
             <View key={task} style={styles.task}>
               <Text>
@@ -30,7 +31,7 @@ module.exports = React.createClass({
               </Text>
               <TouchableOpacity
                 onPress={() => {
-                  this.deleteTask(task, index);
+                  this.completeTask(task, index);
                 }}
               >
                 <Text style={styles.checkMark}>
@@ -43,9 +44,29 @@ module.exports = React.createClass({
     )
   },
 
-  deleteTask(task, index) {
-    let tasks = this.state.tasks.splice(index, 1);
-    this.setState(tasks);
+  renderCompleted(tasks) {
+    return (
+      tasks.map((task) => {
+        return (
+          <View style={styles.task} key={task}>
+            <Text style={styles.completedTask}>
+              {task} - completed
+            </Text>
+          </View>
+        )
+      })
+    )
+  },
+
+  completeTask(task, index) {
+    let completedTask = this.state.tasks[index];
+    let completedTasks = this.state.completedTasks.concat([completedTask]);
+    let tasks = this.state.tasks;
+    tasks = tasks.slice(0, index).concat(tasks.slice(index+1));
+    this.setState({
+      tasks,
+      completedTasks
+    });
   },
 
   addTask() {
@@ -68,13 +89,12 @@ module.exports = React.createClass({
             })
             console.log(this.state.task);
           }}
-          onEndEditing={
-            () => {
-              this.addTask()
-            }
-          }
+          onEndEditing={(text) => {
+            this.addTask()
+          }}
         />
         {this.renderList(this.state.tasks)}
+        {this.renderCompleted(this.state.completedTasks)}
       </View>
     )
   }
@@ -104,6 +124,10 @@ const styles = StyleSheet.create({
   },
   checkMark: {
     fontSize: 20
+  },
+  completedTask: {
+    textDecorationLine: 'line-through',
+    color: '#555'
   }
 
 })
