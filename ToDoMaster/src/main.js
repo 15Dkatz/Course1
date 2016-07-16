@@ -4,7 +4,8 @@ import React, { Component } from 'react';
 import {
   View,
   Text,
-  StyleSheet
+  StyleSheet,
+  TextInput
 } from 'react-native';
 
 module.exports = React.createClass({
@@ -33,6 +34,10 @@ module.exports = React.createClass({
   render() {
     return (
       <View style={styles.container}>
+        <TextInput
+          placeholder='add a task'
+          style={styles.taskInput}
+        />
         {this.renderList(this.state.tasks)}
       </View>
     )
@@ -45,10 +50,14 @@ const styles = StyleSheet.create({
     // styling to center overall content
   },
   task: {
-    flex: 1,
+    // flex: 1,
+    height: 50,
     justifyContent: 'center',
     alignItems: 'center',
-    borderWidth: 2
+    borderBottomWidth: 1
   },
+  taskInput: {
+    height: 50
+  }
 
 })
