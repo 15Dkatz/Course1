@@ -5,7 +5,8 @@ import {
   View,
   Text,
   StyleSheet,
-  TextInput
+  TextInput,
+  Button
 } from 'react-native';
 
 module.exports = React.createClass({
@@ -33,11 +34,19 @@ module.exports = React.createClass({
     )
   },
 
+  addTask() {
+    // goal of addTask is to add the current task to this.state.tasks
+    let tasks = this.state.tasks.concat([this.state.task]);
+    this.setState({
+      tasks
+    });
+  },
+
   render() {
     return (
       <View style={styles.container}>
         <TextInput
-          placeholder='add a task'
+          placeholder='Add a task...'
           style={styles.taskInput}
           onChangeText={(text) => {
             this.setState({
@@ -45,6 +54,11 @@ module.exports = React.createClass({
             })
             console.log(this.state.task);
           }}
+          onEndEditing={
+            () => {
+              this.addTask()
+            }
+          }
         />
         {this.renderList(this.state.tasks)}
       </View>
