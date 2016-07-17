@@ -9,10 +9,10 @@ import {
 
 const API_KEY='Bearer SZRBEN2CGEUPT57YVMXP';
 const ROOT_URL = 'https://www.eventbriteapi.com/v3/events/search/';
+const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
 
 module.exports = React.createClass({
   getInitialState() {
-    var ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
     return {
       dataSource: ds.cloneWithRows([
         {
@@ -22,7 +22,10 @@ module.exports = React.createClass({
           url: 'www.eventone.com'
         },
         {
-          
+          name: {
+            text: 'Event 2'
+          },
+          url: 'www.eventtwo.com'
         }
       ])
     }
@@ -44,6 +47,9 @@ module.exports = React.createClass({
     .then((response) => response.json())
     .then((responseJSON) => {
       console.log('responseJSON', responseJSON);
+      this.setState({
+        dataSource: ds.cloneWithRows(responseJSON.events)
+      })
     })
   },
 
@@ -51,7 +57,10 @@ module.exports = React.createClass({
     return (
       <View style={styles.row}>
         <Text style={styles.rowText}>
-          {rowData}
+          {rowData.name.text}
+        </Text>
+        <Text>
+          {rowData.url}
         </Text>
       </View>
     )
