@@ -68,19 +68,6 @@ module.exports = React.createClass({
   },
 
 
-  completeTask(index) {
-    let completedTask = this.state.tasks[index];
-    let completedTasks = this.state.completedTasks == null ? [completedTask] : this.state.completedTasks.concat([completedTask]);
-    let tasks = this.state.tasks;
-    tasks = tasks.slice(0, index).concat(tasks.slice(index+1));
-    this.setState({
-      tasks,
-      completedTasks
-    });
-    this.setStorage();
-  },
-
-
   renderCompleted(tasks) {
     if (tasks) {
       return (
@@ -115,10 +102,26 @@ module.exports = React.createClass({
     this.setStorage();
   },
 
+  completeTask(index) {
+    let completedTask = this.state.tasks[index];
+    let completedTasks = this.state.completedTasks;
+    // here we can take advantage of es6 and use the spread operator make a our concatenation more neat
+    completedTasks = completedTasks == null ? [completedTask] : [completedTask, ...completedTasks];
+    let tasks = this.state.tasks;
+    tasks = tasks.slice(0, index).concat(tasks.slice(index+1));
+    this.setState({
+      tasks,
+      completedTasks
+    });
+    this.setStorage();
+  },
+
   addTask() {
     // goal of addTask is to add the current task to this.state.tasks
-    let tasks = this.state.tasks == null ? [this.state.task] : this.state.tasks.concat([this.state.task]);
-    this.state.task='';
+    let tasks = this.state.tasks;
+    let newTask = this.state.task;
+    // switch placement of newTask and tasks around concat to insert at end instead of beginning
+    tasks = tasks == null ? [newTask] : [newTask, ...tasks];
     this.setState({
       tasks
     });
