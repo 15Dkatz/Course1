@@ -31,6 +31,9 @@ module.exports = React.createClass({
       <Component
         navigator={navigator}
         title={route.title}
+        description={route.description}
+        url={route.url}
+        img={route.img}
       />
     )
   }

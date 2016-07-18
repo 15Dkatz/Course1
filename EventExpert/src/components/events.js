@@ -52,7 +52,10 @@ module.exports = React.createClass({
     console.log('open a detail page for', rowData);
     this.props.navigator.push({
       name: 'eventDetail',
-      title: rowData.name.text
+      title: rowData.name.text,
+      description: rowData.description.text,
+      url: rowData.url,
+      img: rowData.logo.url
     })
   },
 
@@ -70,16 +73,17 @@ module.exports = React.createClass({
 
     // we need to handle the case that the rowData.logo key is invalid because some events do not provide a picture
     const defaultImg = 'http://vignette3.wikia.nocookie.net/spore/images/6/6c/Question-mark.png/revision/latest?cb=20110427230528';
+    let img = rowData.logo != null ? rowData.logo.url : defaultImg;
 
     return (
       <View style={styles.row}>
         <Image
           style={styles.rowLogo}
-          source={{uri: rowData.logo != null ? rowData.logo.url : defaultImg}}
+          source={{uri: img}}
         />
         <View style={styles.rowDetails}>
           <Text style={styles.title}>
-            {rowData.name.text}
+            {rowData.name.text.length > 30 ? `${rowData.name.text.substring(0, 30)}...` : rowData.name.text}
           </Text>
           <TouchableOpacity
             onPress={()=>{this.details(rowData)}}
@@ -130,6 +134,8 @@ module.exports = React.createClass({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    //necessary for clean transitions
+    backgroundColor: '#fff'
   },
   loadingContainer: {
     flex: 1,
