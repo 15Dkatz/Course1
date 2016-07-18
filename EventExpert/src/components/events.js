@@ -22,7 +22,8 @@ module.exports = React.createClass({
       dataSource: ds.cloneWithRows([
         // { name: { text: 'Loading...' }, }, { name: { text: 'Event 2' }, url: 'www.eventtwo.com' }
         ''
-      ])
+      ]),
+      loading: false
     }
   },
 
@@ -31,6 +32,8 @@ module.exports = React.createClass({
   // },
 
   searchEvents(category, city) {
+    this.setState({loading: true})
+
     const FETCH_URL = `${ROOT_URL}?q=${category}&venue.city=${city}/`;
 
     fetch(FETCH_URL, {
@@ -43,7 +46,8 @@ module.exports = React.createClass({
     .then((responseJSON) => {
       // console.log('responseJSON', responseJSON);
       this.setState({
-        dataSource: ds.cloneWithRows(responseJSON.events)
+        dataSource: ds.cloneWithRows(responseJSON.events),
+        loading: false
       })
     })
   },
@@ -60,12 +64,10 @@ module.exports = React.createClass({
   },
 
   renderRow(rowData) {
-    console.log('rowData', rowData);
-    // let startTime = rowData.start.local;
     if (rowData==''||rowData==null) {
       return (
         <View style={styles.loadingContainer}>
-          <Text>Enter a category and a city</Text>
+          <Text>Search an event category and city</Text>
         </View>
       );
     }
@@ -113,7 +115,7 @@ module.exports = React.createClass({
           />
           <TouchableOpacity style={styles.button}
             onPress={()=>{
-              this.searchEvents(this.state.eventType, this.state.city)
+              this.searchEvents(this.state.eventType, this.state.city);
             }}
           >
             <Text style={styles.buttonText}>
@@ -121,11 +123,22 @@ module.exports = React.createClass({
             </Text>
           </TouchableOpacity>
         </View>
-        <ListView
-          style={styles.list}
-          dataSource={this.state.dataSource}
-          renderRow={(rowData) => this.renderRow(rowData)}
-        />
+        {
+          this.state.loading ?
+            <View
+              style={styles.list}
+              >
+              <Text>
+                Loading...
+              </Text>
+            </View>
+          :
+            <ListView
+              style={styles.list}
+              dataSource={this.state.dataSource}
+              renderRow={(rowData) => this.renderRow(rowData)}
+            />
+        }
       </View>
     );
   }
