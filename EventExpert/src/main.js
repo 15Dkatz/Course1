@@ -6,7 +6,8 @@ import {
   View,
   ListView,
   TouchableOpacity,
-  Image
+  Image,
+  TextInput
 } from 'react-native';
 
 const API_KEY='Bearer SZRBEN2CGEUPT57YVMXP';
@@ -16,26 +17,18 @@ const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
 module.exports = React.createClass({
   getInitialState() {
     return {
+      eventType: '',
+      city: '',
       dataSource: ds.cloneWithRows([
-        // {
-        //   name: {
-        //     text: 'Loading...'
-        //   },
-        // },
-        // {
-        //   name: {
-        //     text: 'Event 2'
-        //   },
-        //   url: 'www.eventtwo.com'
-        // }
+        // { name: { text: 'Loading...' }, }, { name: { text: 'Event 2' }, url: 'www.eventtwo.com' }
         ''
       ])
     }
   },
 
-  componentDidMount() {
-    this.searchEvents('hackathon', 'San Francisco');
-  },
+  // componentDidMount() {
+  //   this.searchEvents('food', 'San Francisco');
+  // },
 
   searchEvents(category, city) {
     const FETCH_URL = `${ROOT_URL}?q=${category}&venue.city=${city}/`;
@@ -62,21 +55,23 @@ module.exports = React.createClass({
   renderRow(rowData) {
     console.log('rowData', rowData);
     // let startTime = rowData.start.local;
-    if (rowData=='') {
+    if (rowData==''||rowData==null) {
       return (
-        <View style={styles.container}>
-          <Text>Loading...</Text>
+        <View style={styles.loadingContainer}>
+          <Text>Enter a category and a city</Text>
         </View>
       );
     }
 
-    const img = rowData.logo.url;
+
+    // we need to handle the case that the rowData.logo key is invalid because some events do not provide a picture
+    const defaultImg = 'http://vignette3.wikia.nocookie.net/spore/images/6/6c/Question-mark.png/revision/latest?cb=20110427230528';
 
     return (
       <View style={styles.row}>
         <Image
           style={styles.rowLogo}
-          source={{uri: img}}
+          source={{uri: rowData.logo != null ? rowData.logo.url : defaultImg}}
         />
         <View style={styles.rowDetails}>
           <Text style={styles.title}>
@@ -96,11 +91,34 @@ module.exports = React.createClass({
 
   render() {
     return (
-      <ListView
-        style={styles.list}
-        dataSource={this.state.dataSource}
-        renderRow={(rowData) => this.renderRow(rowData)}
-      />
+      <View style={styles.container}>
+        <View style={styles.inputContainer}>
+          <TextInput
+            style={styles.input}
+            placeholder='Event type...'
+            onChangeText={(text)=>{this.setState({eventType: text})}}
+          />
+          <TextInput
+            style={styles.input}
+            placeholder='City...'
+            onChangeText={(text)=>{this.setState({city: text})}}
+          />
+          <TouchableOpacity style={styles.button}
+            onPress={()=>{
+              this.searchEvents(this.state.eventType, this.state.city)
+            }}
+          >
+            <Text style={styles.buttonText}>
+              Search
+            </Text>
+          </TouchableOpacity>
+        </View>
+        <ListView
+          style={styles.list}
+          dataSource={this.state.dataSource}
+          renderRow={(rowData) => this.renderRow(rowData)}
+        />
+      </View>
     );
   }
 });
@@ -108,11 +126,11 @@ module.exports = React.createClass({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+  },
+  loadingContainer: {
+    flex: 1,
     justifyContent: 'center',
     alignItems: 'center'
-  },
-  list: {
-    flex: 1,
   },
   row: {
     flex: 1,
@@ -141,6 +159,33 @@ const styles = StyleSheet.create({
   },
   rowDetails: {
     flex: 4,
-    alignItems: 'center'
+    alignItems: 'center',
+    padding: 1
+  },
+
+  list: {
+    flex: 7
+  },
+
+  inputContainer: {
+    flex: 1,
+    paddingTop: 15
+  },
+  input: {
+    flex: 1,
+    borderColor: '#000',
+    borderRadius: 5,
+    borderWidth: 1,
+    margin: 5,
+    paddingLeft: 5
+  },
+
+  button: {
+    alignItems: 'flex-end',
+    paddingRight: 5,
+  },
+  buttonText: {
+    fontSize: 16,
+    color: 'blue'
   }
 });
