@@ -212,3 +212,5 @@ const styles = StyleSheet.create({
     color: 'blue'
   }
 });
+
+// icon credits: http://www.flaticon.com/free-icon/annual-calendar-page_42314
