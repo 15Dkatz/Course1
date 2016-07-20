@@ -32,7 +32,8 @@ module.exports = React.createClass({
         console.log('Authenticated successfully', userData);
         this.props.navigator.push({
           name: 'app',
-          uid: userData.uid
+          uid: userData.uid,
+          email: this.state.email
         })
       }
     })

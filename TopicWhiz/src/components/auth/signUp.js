@@ -40,7 +40,8 @@ module.exports = React.createClass({
       } else {
         navigator.push({
           name: 'app',
-          uid: userData.uid
+          uid: userData.uid,
+          email: this.state.email
         })
       }
     });

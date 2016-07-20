@@ -35,6 +35,7 @@ module.exports = React.createClass({
       <Component
         navigator={navigator}
         uid={route.uid}
+        email={route.email}
       />
     )
   }

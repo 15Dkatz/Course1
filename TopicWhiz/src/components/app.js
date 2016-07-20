@@ -12,6 +12,17 @@ import {
 import styles from '../styles';
 
 module.exports = React.createClass({
+  getInitialState() {
+    return ({
+      userName: ''
+    })
+  },
+
+  componentWillMount() {
+    // creating a userName with regex
+    this.setState({userName: this.props.email.match(/(.+)@/)[1]})
+  },
+
   render() {
     return (
       <View style={styles.container}>
@@ -20,6 +31,9 @@ module.exports = React.createClass({
         </Text>
         <Text>
           {this.props.uid}
+        </Text>
+        <Text>
+          {this.state.userName}
         </Text>
         <TouchableOpacity
           onPress={()=>this.props.navigator.pop()}
