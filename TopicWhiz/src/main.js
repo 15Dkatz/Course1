@@ -8,12 +8,14 @@ import {
 
 import SignIn from './components/auth/signIn';
 import SignUp from './components/auth/signUp';
-import App from './components/app/app';
+import ForgotPassword from './components/auth/forgotPassword';
+import App from './components/app';
 
 let routes = {
   signIn: SignIn,
   signUp: SignUp,
-  app: App
+  app: App,
+  forgotPassword: ForgotPassword
 }
 
 module.exports = React.createClass({

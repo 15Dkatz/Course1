@@ -6,23 +6,50 @@ import {
   TouchableOpacity
 } from 'react-native';
 
-import styles from './styles';
-import {signUp} from './authenticate';
+import styles from '../../styles';
+import {ref} from './authenticate';
 
 module.exports = React.createClass({
   getInitialState() {
     return ({
-      firstName: null,
-      lastName: null,
-      email: null,
-      password: null
+      firstName: '',
+      lastName: '',
+      email: '',
+      password: '',
+      result: ''
     })
+  },
+
+    signUp() {
+    ref.createUser({
+      email: this.state.email,
+      password: this.state.password
+    }, (error, userData) => {
+      if (error) {
+        switch (error.code) {
+          case 'EMAIL_TAKEN':
+            this.setState({result: 'The new account is already in use'});
+            break;
+          case 'INVALID_EMAIL':
+            this.setState({result: 'The specified email is not a valid email'});
+            break;
+          default:
+            this.setState({result: `Error creating user: ${error}`});
+            break;
+        }
+      } else {
+        navigator.push({
+          name: 'app',
+          uid: userData.uid
+        })
+      }
+    });
   },
 
   render() {
     return (
       <View style={styles.container}>
-        <Text style={styles.title}>Sign Up</Text>
+        <Text style={styles.feedback}>{this.state.result}</Text>
         <TextInput
           placeholder='First Name'
           style={styles.input}
@@ -61,7 +88,7 @@ module.exports = React.createClass({
           }}
         />
         <TouchableOpacity
-          onPress={()=>signUp(this.state.email, this.state.password, this.state.firstName, this.state.lastName, this.props.navigator)}
+          onPress={()=>this.signUp()}
         >
           <Text style={styles.button}>Sign Up</Text>
         </TouchableOpacity>

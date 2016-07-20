@@ -5,7 +5,6 @@ module.exports = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'center',
-    alignItems: 'center',
     padding: 40,
     backgroundColor: '#fff'
   },
@@ -25,10 +24,11 @@ module.exports = StyleSheet.create({
     borderRadius: 5,
     padding: 10,
     margin: 2,
-    textAlign: 'center'
+    textAlign: 'center',
+    color: 'blue'
   },
-  title: {
-    fontSize: 20
+  feedback: {
+    textAlign: 'center'
   },
   link: {
     color: 'blue',

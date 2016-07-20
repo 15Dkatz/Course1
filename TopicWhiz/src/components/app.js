@@ -9,7 +9,7 @@ import {
   StyleSheet
 } from 'react-native';
 
-import styles from '../auth/styles';
+import styles from '../styles';
 
 module.exports = React.createClass({
   render() {
