@@ -12,7 +12,7 @@ import {
 
 const API_KEY='Bearer SZRBEN2CGEUPT57YVMXP';
 const ROOT_URL = 'https://www.eventbriteapi.com/v3/events/search/';
-const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
+const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 != r2});
 
 module.exports = React.createClass({
   getInitialState() {
