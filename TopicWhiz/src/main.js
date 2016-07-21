@@ -9,13 +9,15 @@ import {
 import SignIn from './components/auth/signIn';
 import SignUp from './components/auth/signUp';
 import ForgotPassword from './components/auth/forgotPassword';
-import App from './components/app';
+import Topics from './components/topics';
+import TopicDetail from './components/topic-detail';
 
 let routes = {
   signIn: SignIn,
   signUp: SignUp,
-  app: App,
-  forgotPassword: ForgotPassword
+  forgotPassword: ForgotPassword,
+  topics: Topics,
+  topicDetail: TopicDetail
 }
 
 module.exports = React.createClass({
@@ -36,6 +38,10 @@ module.exports = React.createClass({
         navigator={navigator}
         uid={route.uid}
         email={route.email}
+
+        // for topic-detail
+        title={route.title}
+        author={route.author}
       />
     )
   }

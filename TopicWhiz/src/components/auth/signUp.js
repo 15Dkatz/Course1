@@ -38,8 +38,8 @@ module.exports = React.createClass({
             break;
         }
       } else {
-        navigator.push({
-          name: 'app',
+        this.props.navigator.push({
+          name: 'topics',
           uid: userData.uid,
           email: this.state.email
         })

@@ -40,22 +40,38 @@ module.exports = React.createClass({
       for (var x in topics) {
         topicsArr.push(topics[x]);
       }
+
+      // SORT the topics by timeStamp
+
       this.setState({
         dataSource: ds.cloneWithRows(topicsArr)
       })
     })
   },
 
+  detail(data) {
+    console.log('data', data);
+    // pass title, and author
+    this.props.navigator.push({
+      name: 'topicDetail',
+      title: data.title,
+      author: data.author
+    })
+  },
+
   renderRow(rowData) {
     return (
-      <View style={styles.row}>
-        <Text>
+      <TouchableOpacity
+        style={styles.row}
+        onPress={() => this.detail(rowData)}
+      >
+        <Text style={styles.rowTitle}>
           {rowData.title}
         </Text>
         <Text>
-          {rowData.author}
+          by {rowData.author}
         </Text>
-      </View>
+      </TouchableOpacity>
     )
   },
 
@@ -69,7 +85,7 @@ module.exports = React.createClass({
 
     const topicsRef = new Firebase(FIREBASE_URL+'topics/');
     topicsRef.push(topic);
-
+    this.setState({title: ''})
     this.loadTopics();
   },
 
@@ -128,10 +144,18 @@ const styles = StyleSheet.create({
   },
   row: {
     flex: 1,
-    alignItems: 'center'
+    alignItems: 'center',
+    borderColor: '#000',
+    borderWidth: 1,
+    borderRadius: 5,
+    margin: 2,
   },
   title: {
     fontSize: 16
+  },
+  rowTitle: {
+    fontSize: 16,
+    fontWeight: 'bold'
   },
 
   link: {

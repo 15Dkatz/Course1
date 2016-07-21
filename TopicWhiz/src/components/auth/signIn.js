@@ -31,7 +31,7 @@ module.exports = React.createClass({
       } else {
         console.log('Authenticated successfully', userData);
         this.props.navigator.push({
-          name: 'app',
+          name: 'topics',
           uid: userData.uid,
           email: this.state.email
         })
