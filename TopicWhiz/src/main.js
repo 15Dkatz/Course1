@@ -40,8 +40,10 @@ module.exports = React.createClass({
         email={route.email}
 
         // for topic-detail
+        userName={route.userName}
         title={route.title}
         author={route.author}
+        uid={route.uid}
       />
     )
   }

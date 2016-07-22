@@ -9,7 +9,7 @@ import {
   ListView
 } from 'react-native';
 
-import globalStyles from '../styles';
+import styles from '../styles';
 import Firebase from 'firebase';
 import {FIREBASE_URL} from './auth/authenticate';
 const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 != r2});
@@ -29,20 +29,31 @@ module.exports = React.createClass({
     })
 
     this.loadTopics();
+
+    let ref = new Firebase(FIREBASE_URL);
+
+    ref.on('child_changed', (childSnapshot, prevChildKey) => {
+      console.log('childSnapshot', childSnapshot);
+    })
+//     firebaseRef.on('child_changed', function(childSnapshot, prevChildKey) {
+//   // code to handle child data changes.
+// });
   },
 
   loadTopics() {
     const ref = new Firebase(FIREBASE_URL);
     ref.once('value', (snapshot)=> {
       let topics = snapshot.val()['topics'];
-      // convert this js Object into an array
+      // convert this js Object into an array for listRendering
       let topicsArr = [];
       for (var x in topics) {
-        topicsArr.push(topics[x]);
+        let topicObj = topics[x];
+        // create the uid as the uid
+        topicObj.uid = x;
+        topicsArr.push(topicObj);
       }
 
       // SORT the topics by timeStamp
-
       this.setState({
         dataSource: ds.cloneWithRows(topicsArr)
       })
@@ -54,8 +65,10 @@ module.exports = React.createClass({
     // pass title, and author
     this.props.navigator.push({
       name: 'topicDetail',
+      userName: this.state.userName,
       title: data.title,
-      author: data.author
+      author: data.author,
+      uid: data.uid
     })
   },
 
@@ -91,7 +104,7 @@ module.exports = React.createClass({
 
   render() {
     return (
-      <View style={styles.container}>
+      <View style={styles.flexContainer}>
         <View style={styles.header}>
           <TouchableOpacity
             onPress={()=>this.props.navigator.pop()}
@@ -107,7 +120,7 @@ module.exports = React.createClass({
         <View style={styles.body}>
           <TextInput
             placeholder='Something on your mind?'
-            style={globalStyles.input}
+            style={styles.input}
             onChangeText={(text)=>this.setState({title: text})}
             onEndEditing={()=>this.addTopic()}
           />
@@ -122,43 +135,5 @@ module.exports = React.createClass({
   }
 })
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1
-  },
-
-  header: {
-    marginTop: 20,
-    padding: 10,
-    flex: 1,
-    flexDirection: 'row',
-    justifyContent: 'space-between'
-  },
-  body: {
-    flex: 24,
-    paddingRight: 20,
-    paddingLeft: 20
-  },
-  list: {
-    flex: 1
-  },
-  row: {
-    flex: 1,
-    alignItems: 'center',
-    borderColor: '#000',
-    borderWidth: 1,
-    borderRadius: 5,
-    margin: 2,
-  },
-  title: {
-    fontSize: 16
-  },
-  rowTitle: {
-    fontSize: 16,
-    fontWeight: 'bold'
-  },
-
-  link: {
-    color: 'blue'
-  }
+const localStyles = StyleSheet.create({
 })
