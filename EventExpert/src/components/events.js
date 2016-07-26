@@ -167,10 +167,12 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 14,
     fontWeight: 'bold',
-    textAlign: 'center'
+    textAlign: 'center',
+    fontFamily: 'Avenir'
   },
   link: {
-    color: 'blue'
+    color: 'blue',
+    fontFamily: 'Avenir'
   },
 
   rowLogo: {
@@ -187,12 +189,13 @@ const styles = StyleSheet.create({
   },
 
   list: {
-    flex: 7
+    flex: 6
   },
 
   inputContainer: {
     flex: 1,
-    paddingTop: 15
+    paddingTop: 15,
+    height: 90
   },
   input: {
     flex: 1,
@@ -200,7 +203,8 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     borderWidth: 1,
     margin: 5,
-    paddingLeft: 5
+    paddingLeft: 10,
+    fontFamily: 'Avenir'
   },
 
   button: {
@@ -209,7 +213,8 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     fontSize: 16,
-    color: 'blue'
+    color: 'blue',
+    fontFamily: 'Avenir'
   }
 });
 

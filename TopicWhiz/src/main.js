@@ -11,6 +11,7 @@ import SignUp from './components/auth/signUp';
 import ForgotPassword from './components/auth/forgotPassword';
 import Topics from './components/topics';
 import TopicDetail from './components/topic-detail';
+import styles from './styles';
 
 let routes = {
   signIn: SignIn,
@@ -27,6 +28,7 @@ module.exports = React.createClass({
         initialRoute={{name: 'signIn'}}
         renderScene={this.renderScene}
         configureScene={() => {return Navigator.SceneConfigs.FloatFromRight}}
+        style={styles.background}
       />
     )
   },
@@ -43,7 +45,7 @@ module.exports = React.createClass({
         userName={route.userName}
         title={route.title}
         author={route.author}
-        uid={route.uid}
+        row_uid={route.row_uid}
       />
     )
   }

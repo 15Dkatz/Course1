@@ -5,7 +5,6 @@ import {
   Text,
   TextInput,
   TouchableOpacity,
-  StyleSheet,
   ListView
 } from 'react-native';
 
@@ -66,9 +65,11 @@ module.exports = React.createClass({
     this.props.navigator.push({
       name: 'topicDetail',
       userName: this.state.userName,
+      email: this.props.email,
+      uid: this.props.uid,
       title: data.title,
       author: data.author,
-      uid: data.uid
+      row_uid: data.uid
     })
   },
 
@@ -133,7 +134,4 @@ module.exports = React.createClass({
       </View>
     );
   }
-})
-
-const localStyles = StyleSheet.create({
 })

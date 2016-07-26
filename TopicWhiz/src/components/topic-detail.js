@@ -1,5 +1,4 @@
-// Change that post button
-
+// attempt to place the firebase references to the state
 import React, { Component } from 'react';
 import {
   View,
@@ -19,8 +18,13 @@ module.exports = React.createClass({
     return ({
       comment: null,
       comments: null,
-      dataSource: ds.cloneWithRows('')
+      dataSource: ds.cloneWithRows(''),
+      topic_url: ''
     })
+  },
+
+  componentWillMount() {
+    this.setState({topic_url: `${FIREBASE_URL}/topics/${this.props.row_uid}`})
   },
 
   componentDidMount() {
@@ -28,7 +32,7 @@ module.exports = React.createClass({
   },
 
   loadComments() {
-    const topicRef = new Firebase(`${FIREBASE_URL}/topics/${this.props.uid}`);
+    const topicRef = new Firebase(this.state.topic_url);
     topicRef.once('value', (snapshot) => {
       let comments = snapshot.val()['comments'];
       if (!comments) {
@@ -42,7 +46,7 @@ module.exports = React.createClass({
   },
 
   postComment() {
-    const commentsRef = new Firebase(`${FIREBASE_URL}/topics/${this.props.uid}/comments/`);
+    const commentsRef = new Firebase(`${this.state.topic_url}/comments/`);
     let newComment = {
       author: this.props.userName,
       comment: this.state.comment,
@@ -50,6 +54,52 @@ module.exports = React.createClass({
     }
     commentsRef.push(newComment);
     this.loadComments();
+  },
+
+  contains(array, val) {
+    return (array.indexOf(val)>-1);
+  },
+
+  // don't teach this one.
+  flag() {
+    // access the reference for this topic
+    const flagsRef = new Firebase(`${this.state.topic_url}/flaggers/`);
+    const ref = new Firebase(this.state.topic_url);
+    // add this user's uid to the array of 'flaggers' if not already there
+      // check if the array of flaggers has the uid
+      // if yes, do nothing
+    ref.once('value', (snapshot) => {
+      let flaggers = snapshot.val()['flaggers'];
+      // console.log('flaggers', flaggers);
+      // console.log('flaggers.length', flaggers.length);
+      if (flaggers) {
+        if (Object.keys(flaggers).length > 2) {
+          // if the list of flaggers exceeds two, hence three users have flagged the content, then it gets deleted
+          // removes the entire topicRef
+          let topicRef = new Firebase(this.state.topic_url);
+          topicRef.remove();
+          // if topic deleted, reset to the topics page
+          let {uid, email} = this.props;
+          this.props.navigator.push({
+            name: 'topics',
+            uid,
+            email
+          });
+        }
+
+        let uids = [];
+        for (var key in flaggers) {
+          uids.push(flaggers[key]);
+        }
+        if (!this.contains(uids, this.props.uid)) {
+          flagsRef.push(this.props.uid);
+        }
+      } else {
+        // initial flagger
+        flagsRef.push(this.props.uid);
+      }
+
+    })
   },
 
   renderRow(rowData) {
@@ -77,6 +127,13 @@ module.exports = React.createClass({
               Back
             </Text>
           </TouchableOpacity>
+          <TouchableOpacity
+            onPress={()=>this.flag()}
+          >
+            <Text style={styles.link}>
+              Flag
+            </Text>
+          </TouchableOpacity>
         </View>
         <View style={styles.body}>
           <Text style={localStyles.title}>
@@ -92,11 +149,6 @@ module.exports = React.createClass({
               this.setState({comment: text})}
             onEndEditing={()=>this.postComment()}
           />
-          {/*<TouchableOpacity
-            onPress={()=>this.postComment()}
-          >
-            <Text style={styles.button}>Post</Text>
-          </TouchableOpacity>*/}
           <ListView
             styles={styles.list}
             dataSource={this.state.dataSource}
@@ -112,14 +164,17 @@ const localStyles = StyleSheet.create({
   title: {
     textAlign: 'center',
     fontSize: 20,
-    fontWeight: 'bold'
+    fontWeight: 'bold',
+    fontFamily: 'Avenir'
   },
   subtitle: {
     textAlign: 'center',
-    fontSize: 14
+    fontSize: 14,
+    fontFamily: 'Avenir'
   },
   comment: {
-    color: '#777'
+    color: '#777',
+    fontFamily: 'Avenir'
   }
 })
 

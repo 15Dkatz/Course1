@@ -90,6 +90,7 @@ module.exports = React.createClass({
         />
         <TouchableOpacity
           onPress={()=>this.signUp()}
+          style={styles.buttonContainer}
         >
           <Text style={styles.button}>Sign Up</Text>
         </TouchableOpacity>
