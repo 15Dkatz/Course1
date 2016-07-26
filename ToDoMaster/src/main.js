@@ -156,10 +156,12 @@ module.exports = React.createClass({
   }
 });
 
+// don't teach fontFamily
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     // styling to center overall content,
+    backgroundColor: '#c8e6c9'
   },
   header: {
     height: 50,
@@ -169,7 +171,8 @@ const styles = StyleSheet.create({
   },
   headerText: {
     textAlign: 'center',
-    fontSize: 20
+    fontSize: 20,
+    fontFamily: 'Avenir'
   },
   task: {
     // flex: 1,
@@ -183,18 +186,22 @@ const styles = StyleSheet.create({
   taskInput: {
     height: 50,
     textAlign: 'center',
+    backgroundColor: '#fff',
     borderWidth: 1,
     borderRadius: 5,
     margin: 15,
     marginBottom: 0,
-    fontSize: 16
+    fontSize: 16,
+    fontFamily: 'Avenir'
   },
   icon: {
-    fontSize: 20
+    fontSize: 20,
+    fontFamily: 'Avenir'
   },
   completedTask: {
     textDecorationLine: 'line-through',
-    color: '#555'
+    color: '#555',
+    fontFamily: 'Avenir'
   }
 
 })
