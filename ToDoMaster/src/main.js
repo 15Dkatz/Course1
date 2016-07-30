@@ -1,5 +1,3 @@
-//Should I teach the ListView component or save it until a later section?
-
 import React, { Component } from 'react';
 import {
   View,
